@@ -1,0 +1,250 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Olist Agent Case Context v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "case_id",
+    "objective",
+    "mode",
+    "source",
+    "analysis_window",
+    "scope",
+    "tool_budget",
+    "available_tools"
+  ],
+  "properties": {
+    "case_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "objective": {
+      "type": "string",
+      "minLength": 5
+    },
+    "mode": {
+      "enum": [
+        "historical_analysis",
+        "operational"
+      ]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "trigger",
+            "human_request",
+            "orchestrator_followup"
+          ]
+        },
+        "event_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "actor_role": {
+          "enum": [
+            "gestor_operacoes",
+            "analista_cx",
+            "operador_atendimento",
+            "system",
+            null
+          ]
+        },
+        "request_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "analysis_window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start",
+        "end",
+        "timezone"
+      ],
+      "properties": {
+        "start": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "timezone": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "region_codes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "seller_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "product_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "order_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "customer_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "segment_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "trigger": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "metric_id": {
+          "type": "string"
+        },
+        "observed_value": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "comparison_value": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "unit": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "rule_id": {
+          "type": "string"
+        },
+        "rule_description": {
+          "type": "string"
+        },
+        "threshold": {
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      }
+    },
+    "upstream_findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_agent",
+          "summary",
+          "evidence_refs"
+        ],
+        "properties": {
+          "source_agent": {
+            "enum": [
+              "OLI_LOGISTICS_COPILOT",
+              "OLI_VOICE_OF_CUSTOMER",
+              "OLI_CUSTOMER_SERVICE_ENGAGEMENT"
+            ]
+          },
+          "summary": {
+            "type": "string"
+          },
+          "evidence_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "tool_budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_calls"
+      ],
+      "properties": {
+        "max_calls": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "max_records_per_call": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000
+        }
+      }
+    },
+    "available_tools": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "policy_reference": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "historical_reference_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "language": {
+      "enum": [
+        "pt-BR",
+        "en-US"
+      ]
+    }
+  }
+}

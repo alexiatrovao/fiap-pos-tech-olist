@@ -1,0 +1,330 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Olist Agent Result v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "case_id",
+    "agent",
+    "status",
+    "summary",
+    "engagement_type",
+    "findings",
+    "evidence",
+    "recommendations",
+    "cross_agent_signals",
+    "limitations",
+    "missing_data",
+    "metrics_to_monitor"
+  ],
+  "properties": {
+    "case_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "agent": {
+      "enum": [
+        "OLI_LOGISTICS_COPILOT",
+        "OLI_VOICE_OF_CUSTOMER",
+        "OLI_CUSTOMER_SERVICE_ENGAGEMENT"
+      ]
+    },
+    "status": {
+      "enum": [
+        "completed",
+        "no_action",
+        "insufficient_data"
+      ]
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "engagement_type": {
+      "enum": [
+        "recovery",
+        "reengagement",
+        "no_action",
+        "not_applicable"
+      ]
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "finding_id",
+          "statement",
+          "kind",
+          "confidence",
+          "confidence_rationale",
+          "evidence_ids"
+        ],
+        "properties": {
+          "finding_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "statement": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "enum": [
+              "observed",
+              "inference",
+              "hypothesis"
+            ]
+          },
+          "confidence": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ]
+          },
+          "confidence_rationale": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "evidence_id",
+          "source_ref",
+          "source_layer",
+          "period",
+          "description",
+          "quality_notes"
+        ],
+        "properties": {
+          "evidence_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_layer": {
+            "enum": [
+              "gold",
+              "silver",
+              "nlp_enrichment",
+              "runtime_context",
+              "historical_reference"
+            ]
+          },
+          "period": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "start",
+                  "end",
+                  "timezone"
+                ],
+                "properties": {
+                  "start": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "end": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "timezone": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1
+          },
+          "metric_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "value": {
+            "type": [
+              "number",
+              "string",
+              "null"
+            ]
+          },
+          "unit": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "sample_size": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "filters": {
+            "type": "object"
+          },
+          "quality_notes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "recommendations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "recommendation_id",
+          "title",
+          "rationale",
+          "priority",
+          "action_type",
+          "requires_policy_review",
+          "evidence_ids",
+          "success_metrics",
+          "policy_checks"
+        ],
+        "properties": {
+          "recommendation_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "rationale": {
+            "type": "string",
+            "minLength": 1
+          },
+          "priority": {
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "critical"
+            ]
+          },
+          "action_type": {
+            "enum": [
+              "analysis",
+              "internal_alert",
+              "human_review",
+              "customer_communication",
+              "operational_change"
+            ]
+          },
+          "requires_policy_review": {
+            "type": "boolean"
+          },
+          "evidence_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "success_metrics": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          },
+          "policy_checks": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "cross_agent_signals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "target_agent",
+          "question",
+          "evidence_ids"
+        ],
+        "properties": {
+          "target_agent": {
+            "enum": [
+              "OLI_LOGISTICS_COPILOT",
+              "OLI_VOICE_OF_CUSTOMER",
+              "OLI_CUSTOMER_SERVICE_ENGAGEMENT"
+            ]
+          },
+          "question": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "missing_data": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "metrics_to_monitor": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

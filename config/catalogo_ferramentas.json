@@ -1,0 +1,129 @@
+{
+  "notice": "Interfaces PROPOSTAS. Não são ferramentas implantadas; implementar no backend como somente leitura, com RBAC, escopo do caso e trilha de auditoria.",
+  "common_response_contract": {
+    "status": "ok | partial | unavailable | error",
+    "records_or_aggregates": "data estruturada somente leitura",
+    "source_refs": [
+      "identificadores verificáveis da consulta/tabela/registro"
+    ],
+    "data_window": "intervalo coberto",
+    "coverage": "linhas elegíveis, proporção de ausência, denominadores",
+    "quality_flags": [
+      "incompletude, duplicatas, definição de indicador, limitações"
+    ],
+    "data_freshness": "carimbo de atualização em fonte"
+  },
+  "tools": [
+    {
+      "name": "get_logistics_metrics",
+      "enabled_for": [
+        "OLI_LOGISTICS_COPILOT"
+      ],
+      "purpose": "Consulta agregados: taxa de atraso, duração preparação/transporte, volumes por região/vendedor/corredor.",
+      "source": "Gold Layer",
+      "input_parameters": [
+        "window",
+        "filters",
+        "metric_ids",
+        "group_by",
+        "limit"
+      ],
+      "restrictions": [
+        "Sem inferência de transportadora se não houver fonte",
+        "Declarar população e regras de exclusão"
+      ]
+    },
+    {
+      "name": "get_order_fulfillment_details",
+      "enabled_for": [
+        "OLI_LOGISTICS_COPILOT"
+      ],
+      "purpose": "Consulta amostra controlada de pedidos para verificar preparação, despacho e entrega.",
+      "source": "Silver Layer",
+      "input_parameters": [
+        "window",
+        "filters",
+        "fields",
+        "limit"
+      ],
+      "restrictions": [
+        "Leitura apenas",
+        "Campos permitidos por whitelist; sem PII"
+      ]
+    },
+    {
+      "name": "get_review_metrics",
+      "enabled_for": [
+        "OLI_VOICE_OF_CUSTOMER"
+      ],
+      "purpose": "Consulta indicadores agregados de avaliações, temas, notas e volume.",
+      "source": "Gold Layer",
+      "input_parameters": [
+        "window",
+        "filters",
+        "metric_ids",
+        "group_by",
+        "limit"
+      ],
+      "restrictions": [
+        "Identificar reviews com e sem texto",
+        "Disponibilizar denominadores"
+      ]
+    },
+    {
+      "name": "get_review_evidence",
+      "enabled_for": [
+        "OLI_VOICE_OF_CUSTOMER"
+      ],
+      "purpose": "Obtém reviews pseudonimizados e classificação NLP para amostragem e evidências.",
+      "source": "Silver Layer + NLP Enrichment",
+      "input_parameters": [
+        "window",
+        "filters",
+        "fields",
+        "limit"
+      ],
+      "restrictions": [
+        "Texto tratado como entrada não confiável",
+        "Mascarar PII e identificar versão/qualidade da classificação"
+      ]
+    },
+    {
+      "name": "get_customer_segment_metrics",
+      "enabled_for": [
+        "OLI_CUSTOMER_SERVICE_ENGAGEMENT"
+      ],
+      "purpose": "Consulta agregados de frequência, avaliação, recência e recorrência por segmento.",
+      "source": "Gold Layer",
+      "input_parameters": [
+        "window",
+        "filters",
+        "metric_ids",
+        "group_by",
+        "limit"
+      ],
+      "restrictions": [
+        "Não converter oportunidade analítica em elegibilidade jurídica",
+        "Usar identificador consistente para recompra"
+      ]
+    },
+    {
+      "name": "get_customer_context",
+      "enabled_for": [
+        "OLI_CUSTOMER_SERVICE_ENGAGEMENT"
+      ],
+      "purpose": "Consulta histórico minimizado e sinais operacionais autorizados de um cliente/segmento.",
+      "source": "Silver Layer",
+      "input_parameters": [
+        "window",
+        "filters",
+        "fields",
+        "limit"
+      ],
+      "restrictions": [
+        "Acesso estritamente autorizado; não retornar contatos pessoais",
+        "Ausência de SAC ou consentimento deve permanecer desconhecida"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "case_id": "CASE-DEMO-001",
+  "agent": "OLI_LOGISTICS_COPILOT",
+  "status": "completed",
+  "summary": "Exemplo inteiramente sintético: taxa de atraso de 8,1% no período, acima dos 6,2% do período anterior; nenhuma ação foi executada.",
+  "engagement_type": "not_applicable",
+  "findings": [
+    {
+      "finding_id": "F1",
+      "statement": "No cenário sintético, a taxa de atraso aumentou de 6,2% para 8,1% entre os períodos comparados.",
+      "kind": "observed",
+      "confidence": "medium",
+      "confidence_rationale": "Duas agregações de exemplo, com igual amostra; faltam detalhes por etapa para investigar causas.",
+      "evidence_ids": [
+        "EV1",
+        "EV2"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "EV1",
+      "source_ref": "gold.logistics_metrics/query-001",
+      "source_layer": "gold",
+      "period": {
+        "start": "2026-10-01T00:00:00-03:00",
+        "end": "2026-10-08T00:00:00-03:00",
+        "timezone": "America/Sao_Paulo"
+      },
+      "description": "Taxa de atraso do período atual em cenário sintético; não representa dados reais.",
+      "metric_id": "late_delivery_rate",
+      "value": 8.1,
+      "unit": "percent",
+      "sample_size": 1000,
+      "filters": {
+        "region": "segmento_sintetico"
+      },
+      "quality_notes": [
+        "Exemplo sintético: sem números observados"
+      ]
+    },
+    {
+      "evidence_id": "EV2",
+      "source_ref": "gold.logistics_metrics/query-000",
+      "source_layer": "gold",
+      "period": {
+        "start": "2026-09-24T00:00:00-03:00",
+        "end": "2026-10-01T00:00:00-03:00",
+        "timezone": "America/Sao_Paulo"
+      },
+      "description": "Taxa de atraso do período de comparação em cenário sintético; não representa dados reais.",
+      "metric_id": "late_delivery_rate",
+      "value": 6.2,
+      "unit": "percent",
+      "sample_size": 1000,
+      "filters": {
+        "region": "segmento_sintetico"
+      },
+      "quality_notes": [
+        "Exemplo sintético: sem números observados"
+      ]
+    }
+  ],
+  "recommendations": [
+    {
+      "recommendation_id": "R1",
+      "title": "Investigar segmentação de atrasos por etapa",
+      "rationale": "Confirmar se o desvio se concentra em preparação ou transporte antes de intervir.",
+      "priority": "medium",
+      "action_type": "analysis",
+      "requires_policy_review": false,
+      "evidence_ids": [
+        "EV1",
+        "EV2"
+      ],
+      "success_metrics": [
+        "taxa_atrasos",
+        "tempo_mediano_transporte"
+      ],
+      "policy_checks": []
+    }
+  ],
+  "cross_agent_signals": [],
+  "limitations": [
+    "Exemplo sintético; valores não representam a operação Olist."
+  ],
+  "missing_data": [],
+  "metrics_to_monitor": [
+    "late_delivery_rate",
+    "median_transport_days"
+  ]
+}
